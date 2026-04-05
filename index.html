@@ -1,0 +1,946 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Candidates Personal and Associational Information</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Kannada:wght@400;600;700&amp;family=Cormorant+Garamond:wght@400;600;700&amp;family=Playfair+Display:wght@600;700;800&amp;family=Lora:wght@400;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Cormorant Garamond', 'Noto Serif Kannada', serif; font-size: 16px; }
+    h1, h2, h3, h4, h5, h6 { font-family: 'Playfair Display', 'Noto Serif Kannada', serif; letter-spacing: 2px; font-weight: 700; }
+    .gold-text { color: #F4D03F; text-shadow: 3px 3px 6px rgba(0,0,0,0.5); font-size: 2.8rem; font-weight: 800; font-family: 'Playfair Display', serif; }
+    .kannada { font-family: 'Noto Serif Kannada', serif; font-size: 1.4rem; font-weight: 600; letter-spacing: 1px; }
+    .gradient-bg { background: linear-gradient(135deg, #0D1B2A 0%, #1B263B 25%, #415A77 50%, #0D1B2A 75%, #1B263B 100%); position: relative; }
+    .gradient-bg::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 20% 50%, rgba(244,208,63,0.05) 0%, transparent 50%); pointer-events: none; }
+    .card-glass { background: rgba(255,255,255,0.98); backdrop-filter: blur(20px); border: 2px solid rgba(244,208,63,0.4); box-shadow: 0 12px 40px rgba(0,0,0,0.25); }
+    .btn-primary { background: linear-gradient(135deg, #F4D03F 0%, #E8C547 50%, #D4AF37 100%); color: #0D1B2A; font-weight: 700; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(244,208,63,0.35); border: none; font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; }
+    .btn-primary:hover { background: linear-gradient(135deg, #E8C547 0%, #D4AF37 50%, #C19A1B 100%); transform: translateY(-3px); box-shadow: 0 8px 25px rgba(244,208,63,0.45); }
+    .btn-primary:active { transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
+    .input-field { transition: all 0.3s ease; border-color: #C0C0C0; font-family: 'Cormorant Garamond', serif; font-size: 1rem; }
+    .input-field:focus { border-color: #F4D03F; box-shadow: 0 0 0 4px rgba(244,208,63,0.25); background: rgba(244,208,63,0.02); }
+    .logo-frame { width: 110px; height: 110px; border: 4px solid #F4D03F; box-shadow: 0 6px 20px rgba(244,208,63,0.4); }
+    .logo-frame.has-logo { border-style: solid; }
+    .modal-overlay { background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); }
+    .toast { animation: slideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); font-family: 'Cormorant Garamond', serif; font-weight: 600; }
+    @keyframes slideIn { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .royal-accent { color: #F4D03F; }
+    .luxury-border { border-top: 3px solid #F4D03F; border-bottom: 3px solid #F4D03F; }
+    .field-label { color: #0D1B2A; font-weight: 700; font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; letter-spacing: 0.5px; }
+    .luxury-line { height: 2px; background: linear-gradient(90deg, transparent, #F4D03F, transparent); }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="h-full gradient-bg overflow-auto">
+  <div id="app" class="min-h-full w-full"><!-- Toast Container -->
+   <div id="toast-container" class="fixed top-4 right-4 z-50"></div><!-- Password Modal -->
+   <div id="password-modal" class="fixed inset-0 modal-overlay z-40 hidden flex items-center justify-center p-4">
+    <div class="card-glass rounded-2xl p-6 max-w-md w-full shadow-2xl">
+     <h3 id="modal-title" class="text-xl font-bold text-gray-800 mb-2">Enter Password / ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ</h3>
+     <p id="modal-subtitle" class="text-gray-600 mb-4 text-sm"></p><input type="password" id="password-input" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-field text-lg" placeholder="Password / ಪಾಸ್‌ವರ್ಡ್">
+     <p id="password-error" class="text-red-500 text-sm mt-2 hidden">Incorrect password / ತಪ್ಪಾದ ಪಾಸ್‌ವರ್ಡ್</p>
+     <div class="flex gap-3 mt-4"><button onclick="closePasswordModal()" class="flex-1 px-4 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition"> Cancel / ರದ್ದುಮಾಡಿ </button> <button onclick="verifyPassword()" class="flex-1 px-4 py-3 btn-primary text-white rounded-xl font-semibold transition"> Submit / ಸಲ್ಲಿಸಿ </button>
+     </div>
+    </div>
+   </div><!-- Header Section -->
+   <header class="bg-white/10 backdrop-blur-md border-b border-white/20 p-4">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+     <div class="flex items-center gap-4"><!-- Logo Frame -->
+      <div id="logo-container" class="logo-frame rounded-full flex items-center justify-center cursor-pointer overflow-hidden bg-white/20 hover:bg-white/30 transition" onclick="requestLogoUpload()"><span id="logo-placeholder" class="text-yellow-400 text-xs text-center px-1">Click to upload logo</span> <img id="logo-image" class="w-full h-full object-cover hidden" alt="Organization Logo">
+      </div><!-- Organization Name -->
+      <div class="text-left">
+       <h1 class="text-2xl font-bold text-white tracking-wide">RBA</h1>
+       <p class="text-xl text-yellow-300 kannada font-semibold">ರಾಹುಸಂ</p>
+      </div>
+     </div><input type="file" id="logo-upload" accept="image/*" class="hidden" onchange="handleLogoUpload(event)">
+    </div>
+   </header><!-- Title -->
+   <div class="text-center py-6 px-4">
+    <h2 class="text-2xl md:text-3xl font-bold gold-text">Candidates Personal and Associational Information</h2>
+    <p class="text-xl kannada text-yellow-200 mt-1">ಅಭ್ಯರ್ಥಿಗಳ ವೈಯಕ್ತಿಕ ಮತ್ತು ಸಂಘದ ಮಾಹಿತಿ</p>
+   </div><!-- Main Content -->
+   <div class="max-w-6xl mx-auto px-4 pb-8"><!-- Action Buttons -->
+    <div class="grid md:grid-cols-2 gap-4 mb-6"><button onclick="requestAddInfo()" class="btn-primary text-white py-4 px-6 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition transform hover:scale-[1.02] flex items-center justify-center gap-2">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+      </svg><span>Add Information / ಮಾಹಿತಿ ಸೇರಿಸಿ</span> </button> <button onclick="toggleSearchSection()" class="bg-white/20 hover:bg-white/30 text-white py-4 px-6 rounded-xl font-bold text-lg shadow-lg transition transform hover:scale-[1.02] flex items-center justify-center gap-2 border-2 border-yellow-400/50">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      </svg><span>Search Information / ಮಾಹಿತಿ ಹುಡುಕಿ</span> </button>
+    </div><!-- Add Information Form (Hidden by default) -->
+    <div id="add-form-section" class="card-glass rounded-2xl p-6 mb-6 shadow-xl hidden">
+     <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+      <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+      </svg> Add New Candidate Information / ಹೊಸ ಅಭ್ಯರ್ಥಿ ಮಾಹಿತಿ ಸೇರಿಸಿ</h3>
+     <form id="candidate-form" class="space-y-4">
+      <div class="grid md:grid-cols-2 gap-4"><!-- Field 1: Identification Number -->
+       <div><label class="block text-sm field-label mb-2">1. Identification Number / ಗುರುತಿನ ಸಂಖ್ಯೆ *</label> <input type="text" id="identification_number" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg input-field" placeholder="Enter ID number">
+       </div><!-- Field 2: Registration Number -->
+       <div><label class="block text-sm field-label mb-2">2. Registration Number / ನೋಂದಣಿ ಸಂಖ್ಯೆ *</label> <input type="text" id="registration_number" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg input-field" placeholder="Enter registration number">
+       </div><!-- Field 3: Candidate Name -->
+       <div><label class="block text-sm field-label mb-2">3. Candidate Name / ಅಭ್ಯರ್ಥಿಯ ಹೆಸರು *</label> <input type="text" id="candidate_name" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg input-field" placeholder="Enter full name">
+       </div><!-- Field 4: Residential Address -->
+       <div><label class="block text-sm field-label mb-2">4. Residential Address / ವಾಸ ವಿಳಾಸ</label> <input type="text" id="residential_address" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg input-field" placeholder="Enter address">
+       </div><!-- Field 5: Father and Mother Name -->
+       <div><label class="block text-sm field-label mb-2">5. Father &amp; Mother Name / ತಂದೆ ಮತ್ತು ತಾಯಿ ಹೆಸರು</label> <input type="text" id="father_mother_name" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg input-field" placeholder="Enter parents' names">
+       </div><!-- Field 6: Mobile Number -->
+       <div><label class="block text-sm field-label mb-2">6. Mobile Number / ಮೊಬೈಲ್ ಸಂಖ್ಯೆ</label> <input type="tel" id="mobile_number" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg input-field" placeholder="Enter mobile number">
+       </div><!-- Field 7: Educational Qualification -->
+       <div><label class="block text-sm field-label mb-2">7. Educational Qualification / ಶೈಕ್ಷಣಿಕ ಅರ್ಹತೆ</label> <input type="text" id="educational_qualification" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg input-field" placeholder="Enter qualification">
+       </div><!-- Field 8: Date of Joining -->
+       <div><label class="block text-sm field-label mb-2">8. Date of Joining / ಸೇರ್ಪಡೆ ದಿನಾಂಕ</label> <input type="date" id="date_of_joining" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg input-field">
+       </div><!-- Field 9: Time of Joining -->
+       <div><label class="block text-sm field-label mb-2">9. Time of Joining / ಸೇರ್ಪಡೆ ಸಮಯ</label> <input type="time" id="time_of_joining" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg input-field">
+       </div><!-- Field 10: Position (RBA) -->
+       <div><label class="block text-sm field-label mb-2">10. Position (RBA) / ಹುದ್ದೆ (ರಾಹುಸಂ)</label> <input type="text" id="position_rba" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg input-field" placeholder="Enter position">
+       </div><!-- Field 11: Short Name -->
+       <div><label class="block text-sm field-label mb-2">11. Short Name / ಸಂಕ್ಷಿಪ್ತ ಹೆಸರು</label> <input type="text" id="short_name" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg input-field" placeholder="Enter short name">
+       </div><!-- Field 12: Date of Birth -->
+       <div><label class="block text-sm field-label mb-2">12. Date of Birth / ಜನ್ಮ ದಿನಾಂಕ</label> <input type="date" id="date_of_birth" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg input-field" onchange="calculateAge()">
+       </div><!-- Field 13: Age -->
+       <div><label class="block text-sm field-label mb-2">13. Age / ವಯಸ್ಸು</label> <input type="text" id="age" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg input-field bg-gray-100" placeholder="Auto-calculated" readonly>
+       </div><!-- Field 14: Social Media Links -->
+       <div><label class="block text-sm field-label mb-2">14. Social Media Links / ಸಾಮಾಜಿಕ ಮಾಧ್ಯಮ ಲಿಂಕ್‌ಗಳು</label> <input type="text" id="social_media_links" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg input-field" placeholder="Enter social media links">
+       </div><!-- Field 15: Sameness -->
+       <div><label class="block text-sm field-label mb-2">15. Sameness / ಸಮಾನತೆ</label> <input type="text" id="sameness" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg input-field" placeholder="Enter sameness info">
+       </div>
+      </div><!-- Photo Upload -->
+      <div class="grid md:grid-cols-2 gap-4 mt-4">
+       <div><label class="block text-sm font-semibold text-gray-700 mb-1">Photo / ಫೋಟೋ *</label>
+        <div class="flex items-center gap-4">
+         <div id="photo-preview" class="w-24 h-24 border-2 border-dashed border-gray-300 rounded-xl flex items-center justify-center bg-gray-50 overflow-hidden"><span class="text-gray-400 text-xs text-center">No Photo</span>
+         </div>
+         <div class="flex-1"><input type="file" id="photo_upload" accept="image/*" class="hidden" onchange="handlePhotoUpload(event)"> <button type="button" onclick="document.getElementById('photo_upload').click()" class="w-full px-4 py-3 bg-blue-500 text-white rounded-xl font-semibold hover:bg-blue-600 transition"> Select Photo from Gallery / ಗ್ಯಾಲರಿಯಿಂದ ಫೋಟೋ ಆಯ್ಕೆಮಾಡಿ </button>
+         </div>
+        </div>
+       </div><!-- Signature Upload -->
+       <div><label class="block text-sm font-semibold text-gray-700 mb-1">Signature / ಸಹಿ *</label>
+        <div class="flex items-center gap-4">
+         <div id="signature-preview" class="w-24 h-24 border-2 border-dashed border-gray-300 rounded-xl flex items-center justify-center bg-gray-50 overflow-hidden"><span class="text-gray-400 text-xs text-center">No Signature</span>
+         </div>
+         <div class="flex-1"><input type="file" id="signature_upload" accept="image/*" class="hidden" onchange="handleSignatureUpload(event)"> <button type="button" onclick="document.getElementById('signature_upload').click()" class="w-full px-4 py-3 bg-green-500 text-white rounded-xl font-semibold hover:bg-green-600 transition"> Select Signature from Gallery / ಗ್ಯಾಲರಿಯಿಂದ ಸಹಿ ಆಯ್ಕೆಮಾಡಿ </button>
+         </div>
+        </div>
+       </div>
+      </div><!-- Custom Fields Container -->
+      <div id="custom-fields-container" class="space-y-4 mt-4"></div><!-- Add Custom Field Button --> <button type="button" onclick="addCustomField()" class="mt-4 px-4 py-2 bg-purple-500 text-white rounded-xl font-semibold hover:bg-purple-600 transition flex items-center gap-2">
+       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+       </svg> Add Custom Field / ಕಸ್ಟಮ್ ಫೀಲ್ಡ್ ಸೇರಿಸಿ </button> <!-- Save Button -->
+      <div class="flex gap-4 mt-6"><button type="button" onclick="hideAddForm()" class="flex-1 px-6 py-4 bg-gray-200 text-gray-700 rounded-xl font-bold text-lg hover:bg-gray-300 transition"> Cancel / ರದ್ದುಮಾಡಿ </button> <button type="submit" id="save-btn" class="flex-1 px-6 py-4 btn-primary text-white rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition"> <span id="save-btn-text">Save / ಉಳಿಸಿ</span> </button>
+      </div>
+     </form>
+    </div><!-- Search Section -->
+    <div id="search-section" class="card-glass rounded-2xl p-6 mb-6 shadow-xl hidden">
+     <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+      <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      </svg> Find Information by Identification Number / ಗುರುತಿನ ಸಂಖ್ಯೆಯಿಂದ ಮಾಹಿತಿ ಹುಡುಕಿ</h3>
+     <div class="flex gap-4"><input type="text" id="search-input" class="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl input-field text-lg" placeholder="Enter Identification Number / ಗುರುತಿನ ಸಂಖ್ಯೆ ನಮೂದಿಸಿ"> <button onclick="searchCandidate()" class="px-6 py-3 btn-primary text-white rounded-xl font-bold hover:shadow-lg transition"> Search / ಹುಡುಕಿ </button>
+     </div><!-- Search Results -->
+     <div id="search-results" class="mt-6 hidden">
+      <div class="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl p-6 border-2 border-yellow-200">
+       <div class="flex justify-between items-start mb-4">
+        <h4 class="text-lg font-bold text-gray-800">Candidate Details / ಅಭ್ಯರ್ಥಿ ವಿವರಗಳು</h4>
+        <div class="flex gap-2"><button onclick="requestEditInfo()" class="px-4 py-2 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition text-sm"> Edit Info / ಮಾಹಿತಿ ಬದಲಿಸಿ </button> <button onclick="requestDeleteInfo()" class="px-4 py-2 bg-red-500 text-white rounded-lg font-semibold hover:bg-red-600 transition text-sm"> Delete / ಅಳಿಸಿ </button>
+        </div>
+       </div>
+       <div class="grid md:grid-cols-3 gap-4"><!-- Photo and Signature Display -->
+        <div class="md:col-span-1 flex flex-col items-center gap-4">
+         <div id="result-photo" class="w-32 h-32 rounded-xl border-2 border-yellow-300 overflow-hidden bg-gray-100 flex items-center justify-center"><span class="text-gray-400">No Photo</span>
+         </div>
+         <div id="result-signature" class="w-32 h-16 rounded-lg border-2 border-yellow-300 overflow-hidden bg-gray-100 flex items-center justify-center"><span class="text-gray-400 text-xs">No Signature</span>
+         </div>
+        </div><!-- Details -->
+        <div id="result-details" class="md:col-span-2 space-y-2"></div>
+       </div>
+      </div>
+     </div>
+     <p id="no-results" class="mt-4 text-center text-gray-500 hidden">No candidate found with this Identification Number / ಈ ಗುರುತಿನ ಸಂಖ್ಯೆಯೊಂದಿಗೆ ಯಾವುದೇ ಅಭ್ಯರ್ಥಿ ಕಂಡುಬಂದಿಲ್ಲ</p>
+    </div><!-- Edit Form (Hidden by default) -->
+    <div id="edit-form-section" class="card-glass rounded-2xl p-6 mb-6 shadow-xl hidden">
+     <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+      <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+      </svg> Edit Candidate Information / ಅಭ್ಯರ್ಥಿ ಮಾಹಿತಿ ಬದಲಿಸಿ</h3>
+     <form id="edit-candidate-form" class="space-y-4">
+      <div class="grid md:grid-cols-2 gap-4">
+       <div><label class="block text-sm font-semibold text-gray-700 mb-1">1. Identification Number / ಗುರುತಿನ ಸಂಖ್ಯೆ *</label> <input type="text" id="edit_identification_number" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-field bg-gray-100" readonly>
+       </div>
+       <div><label class="block text-sm font-semibold text-gray-700 mb-1">2. Registration Number / ನೋಂದಣಿ ಸಂಖ್ಯೆ *</label> <input type="text" id="edit_registration_number" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-field">
+       </div>
+       <div><label class="block text-sm font-semibold text-gray-700 mb-1">3. Candidate Name / ಅಭ್ಯರ್ಥಿಯ ಹೆಸರು *</label> <input type="text" id="edit_candidate_name" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-field">
+       </div>
+       <div><label class="block text-sm font-semibold text-gray-700 mb-1">4. Residential Address / ವಾಸ ವಿಳಾಸ</label> <input type="text" id="edit_residential_address" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-field">
+       </div>
+       <div><label class="block text-sm font-semibold text-gray-700 mb-1">5. Father &amp; Mother Name / ತಂದೆ ಮತ್ತು ತಾಯಿ ಹೆಸರು</label> <input type="text" id="edit_father_mother_name" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-field">
+       </div>
+       <div><label class="block text-sm font-semibold text-gray-700 mb-1">6. Mobile Number / ಮೊಬೈಲ್ ಸಂಖ್ಯೆ</label> <input type="tel" id="edit_mobile_number" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-field">
+       </div>
+       <div><label class="block text-sm font-semibold text-gray-700 mb-1">7. Educational Qualification / ಶೈಕ್ಷಣಿಕ ಅರ್ಹತೆ</label> <input type="text" id="edit_educational_qualification" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-field">
+       </div>
+       <div><label class="block text-sm font-semibold text-gray-700 mb-1">8. Date of Joining / ಸೇರ್ಪಡೆ ದಿನಾಂಕ</label> <input type="date" id="edit_date_of_joining" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-field">
+       </div>
+       <div><label class="block text-sm font-semibold text-gray-700 mb-1">9. Time of Joining / ಸೇರ್ಪಡೆ ಸಮಯ</label> <input type="time" id="edit_time_of_joining" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-field">
+       </div>
+       <div><label class="block text-sm font-semibold text-gray-700 mb-1">10. Position (RBA) / ಹುದ್ದೆ (ರಾಹುಸಂ)</label> <input type="text" id="edit_position_rba" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-field">
+       </div>
+       <div><label class="block text-sm font-semibold text-gray-700 mb-1">11. Short Name / ಸಂಕ್ಷಿಪ್ತ ಹೆಸರು</label> <input type="text" id="edit_short_name" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-field">
+       </div>
+       <div><label class="block text-sm font-semibold text-gray-700 mb-1">12. Date of Birth / ಜನ್ಮ ದಿನಾಂಕ</label> <input type="date" id="edit_date_of_birth" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-field" onchange="calculateEditAge()">
+       </div>
+       <div><label class="block text-sm font-semibold text-gray-700 mb-1">13. Age / ವಯಸ್ಸು</label> <input type="text" id="edit_age" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-field bg-gray-100" readonly>
+       </div>
+       <div><label class="block text-sm font-semibold text-gray-700 mb-1">14. Social Media Links / ಸಾಮಾಜಿಕ ಮಾಧ್ಯಮ ಲಿಂಕ್‌ಗಳು</label> <input type="text" id="edit_social_media_links" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-field">
+       </div>
+       <div><label class="block text-sm font-semibold text-gray-700 mb-1">15. Sameness / ಸಮಾನತೆ</label> <input type="text" id="edit_sameness" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-field">
+       </div>
+      </div><!-- Photo Upload for Edit -->
+      <div class="grid md:grid-cols-2 gap-4 mt-4">
+       <div><label class="block text-sm font-semibold text-gray-700 mb-1">Photo / ಫೋಟೋ</label>
+        <div class="flex items-center gap-4">
+         <div id="edit-photo-preview" class="w-24 h-24 border-2 border-dashed border-gray-300 rounded-xl flex items-center justify-center bg-gray-50 overflow-hidden"><span class="text-gray-400 text-xs text-center">No Photo</span>
+         </div>
+         <div class="flex-1"><input type="file" id="edit_photo_upload" accept="image/*" class="hidden" onchange="handleEditPhotoUpload(event)"> <button type="button" onclick="document.getElementById('edit_photo_upload').click()" class="w-full px-4 py-3 bg-blue-500 text-white rounded-xl font-semibold hover:bg-blue-600 transition"> Change Photo / ಫೋಟೋ ಬದಲಿಸಿ </button>
+         </div>
+        </div>
+       </div>
+       <div><label class="block text-sm font-semibold text-gray-700 mb-1">Signature / ಸಹಿ</label>
+        <div class="flex items-center gap-4">
+         <div id="edit-signature-preview" class="w-24 h-24 border-2 border-dashed border-gray-300 rounded-xl flex items-center justify-center bg-gray-50 overflow-hidden"><span class="text-gray-400 text-xs text-center">No Signature</span>
+         </div>
+         <div class="flex-1"><input type="file" id="edit_signature_upload" accept="image/*" class="hidden" onchange="handleEditSignatureUpload(event)"> <button type="button" onclick="document.getElementById('edit_signature_upload').click()" class="w-full px-4 py-3 bg-green-500 text-white rounded-xl font-semibold hover:bg-green-600 transition"> Change Signature / ಸಹಿ ಬದಲಿಸಿ </button>
+         </div>
+        </div>
+       </div>
+      </div><!-- Edit Custom Fields Container -->
+      <div id="edit-custom-fields-container" class="space-y-4 mt-4"></div><button type="button" onclick="addEditCustomField()" class="mt-4 px-4 py-2 bg-purple-500 text-white rounded-xl font-semibold hover:bg-purple-600 transition flex items-center gap-2">
+       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+       </svg> Add Custom Field / ಕಸ್ಟಮ್ ಫೀಲ್ಡ್ ಸೇರಿಸಿ </button>
+      <div class="flex gap-4 mt-6"><button type="button" onclick="hideEditForm()" class="flex-1 px-6 py-4 bg-gray-200 text-gray-700 rounded-xl font-bold text-lg hover:bg-gray-300 transition"> Cancel / ರದ್ದುಮಾಡಿ </button> <button type="submit" id="update-btn" class="flex-1 px-6 py-4 btn-primary text-white rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition"> <span id="update-btn-text">Update / ನವೀಕರಿಸಿ</span> </button>
+      </div>
+     </form>
+    </div><!-- Delete Confirmation -->
+    <div id="delete-confirmation" class="card-glass rounded-2xl p-6 mb-6 shadow-xl hidden">
+     <div class="text-center">
+      <svg class="w-16 h-16 mx-auto text-red-500 mb-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+      </svg>
+      <h3 class="text-xl font-bold text-gray-800 mb-2">Confirm Deletion / ಅಳಿಸುವಿಕೆಯನ್ನು ಖಚಿತಪಡಿಸಿ</h3>
+      <p class="text-gray-600 mb-4">Are you sure you want to delete this candidate's information? This action cannot be undone.</p>
+      <p class="text-gray-600 mb-4 kannada">ನೀವು ಈ ಅಭ್ಯರ್ಥಿಯ ಮಾಹಿತಿಯನ್ನು ಅಳಿಸಲು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ? ಈ ಕ್ರಿಯೆಯನ್ನು ರದ್ದುಗೊಳಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ.</p>
+      <div class="flex gap-4 justify-center"><button onclick="cancelDelete()" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-bold hover:bg-gray-300 transition"> Cancel / ರದ್ದುಮಾಡಿ </button> <button onclick="confirmDelete()" id="confirm-delete-btn" class="px-6 py-3 bg-red-500 text-white rounded-xl font-bold hover:bg-red-600 transition"> Delete / ಅಳಿಸಿ </button>
+      </div>
+     </div>
+    </div>
+   </div><!-- Footer Section -->
+   <footer class="bg-white/10 backdrop-blur-md border-t border-white/20 mt-8 py-6 px-4">
+    <div class="max-w-6xl mx-auto text-center">
+     <div class="mb-3">
+      <p class="text-yellow-300 font-bold text-lg kannada">ಸಂಸ್ಥಾಪಕರು - ಧನುಷ್ ಬಿ.ಕೆ</p>
+      <p class="text-yellow-300 font-bold text-lg">Founder - Dhanusha B.K</p>
+     </div>
+     <p class="text-yellow-200 text-sm font-semibold tracking-wide">©2018-RBA</p>
+    </div>
+   </footer>
+  </div>
+  <script>
+    // Configuration
+    const CORRECT_PASSWORD = '75575718';
+    const defaultConfig = {
+      site_title: 'Candidates Personal and Associational Information',
+      logo_data: ''
+    };
+    let config = { ...defaultConfig };
+    let allCandidates = [];
+    let currentCandidate = null;
+    let photoData = '';
+    let signatureData = '';
+    let editPhotoData = '';
+    let editSignatureData = '';
+    let customFieldCount = 0;
+    let editCustomFieldCount = 0;
+    let passwordAction = null;
+    let editCustomFields = {};
+
+    // Toast notification
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      const bgColor = type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500';
+      toast.className = `toast ${bgColor} text-white px-6 py-3 rounded-xl shadow-lg mb-2 font-semibold`;
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    // Password Modal Functions
+    function showPasswordModal(action, subtitle = '') {
+      passwordAction = action;
+      document.getElementById('password-modal').classList.remove('hidden');
+      document.getElementById('password-input').value = '';
+      document.getElementById('password-error').classList.add('hidden');
+      document.getElementById('modal-subtitle').textContent = subtitle;
+      document.getElementById('password-input').focus();
+    }
+
+    function closePasswordModal() {
+      document.getElementById('password-modal').classList.add('hidden');
+      passwordAction = null;
+    }
+
+    function verifyPassword() {
+      const password = document.getElementById('password-input').value;
+      if (password === CORRECT_PASSWORD) {
+        document.getElementById('password-error').classList.add('hidden');
+        const action = passwordAction;
+        closePasswordModal();
+        
+        // Increased delay to ensure modal fully closes
+        setTimeout(() => {
+          if (action === 'logo') {
+            document.getElementById('logo-upload').click();
+          } else if (action === 'add') {
+            showAddForm();
+          } else if (action === 'edit') {
+            showEditForm();
+          } else if (action === 'delete') {
+            showDeleteConfirmation();
+          }
+        }, 300);
+      } else {
+        document.getElementById('password-error').classList.remove('hidden');
+      }
+    }
+
+    // Handle Enter key in password input
+    document.getElementById('password-input').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        verifyPassword();
+      }
+    });
+
+    // Logo Upload Functions
+    function requestLogoUpload() {
+      showPasswordModal('logo', 'Enter password to upload organization logo / ಸಂಸ್ಥೆಯ ಲೋಗೋ ಅಪ್‌ಲೋಡ್ ಮಾಡಲು ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ');
+    }
+
+    function handleLogoUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          config.logo_data = e.target.result;
+          updateLogoDisplay();
+          showToast('Logo uploaded successfully! / ಲೋಗೋ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಲೋಡ್ ಆಗಿದೆ!');
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function updateLogoDisplay() {
+      const container = document.getElementById('logo-container');
+      const placeholder = document.getElementById('logo-placeholder');
+      const image = document.getElementById('logo-image');
+      
+      if (config.logo_data) {
+        placeholder.classList.add('hidden');
+        image.src = config.logo_data;
+        image.classList.remove('hidden');
+        container.classList.add('has-logo');
+      } else {
+        placeholder.classList.remove('hidden');
+        image.classList.add('hidden');
+        container.classList.remove('has-logo');
+      }
+    }
+
+    // Add Information Functions
+    function requestAddInfo() {
+      showPasswordModal('add', 'Enter password to add new candidate information / ಹೊಸ ಅಭ್ಯರ್ಥಿ ಮಾಹಿತಿ ಸೇರಿಸಲು ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ');
+    }
+
+    function showAddForm() {
+      document.getElementById('add-form-section').classList.remove('hidden');
+      document.getElementById('search-section').classList.add('hidden');
+      document.getElementById('edit-form-section').classList.add('hidden');
+      document.getElementById('delete-confirmation').classList.add('hidden');
+      resetAddForm();
+    }
+
+    function hideAddForm() {
+      document.getElementById('add-form-section').classList.add('hidden');
+      resetAddForm();
+    }
+
+    function resetAddForm() {
+      document.getElementById('candidate-form').reset();
+      photoData = '';
+      signatureData = '';
+      customFieldCount = 0;
+      document.getElementById('custom-fields-container').innerHTML = '';
+      document.getElementById('photo-preview').innerHTML = '<span class="text-gray-400 text-xs text-center">No Photo</span>';
+      document.getElementById('signature-preview').innerHTML = '<span class="text-gray-400 text-xs text-center">No Signature</span>';
+    }
+
+    // Search Functions
+    function toggleSearchSection() {
+      const section = document.getElementById('search-section');
+      section.classList.toggle('hidden');
+      document.getElementById('add-form-section').classList.add('hidden');
+      document.getElementById('edit-form-section').classList.add('hidden');
+      document.getElementById('delete-confirmation').classList.add('hidden');
+    }
+
+    function searchCandidate() {
+      const searchId = document.getElementById('search-input').value.trim();
+      if (!searchId) {
+        showToast('Please enter an Identification Number / ದಯವಿಟ್ಟು ಗುರುತಿನ ಸಂಖ್ಯೆ ನಮೂದಿಸಿ', 'error');
+        return;
+      }
+
+      currentCandidate = allCandidates.find(c => c.identification_number === searchId);
+      
+      if (currentCandidate) {
+        displaySearchResults(currentCandidate);
+        document.getElementById('search-results').classList.remove('hidden');
+        document.getElementById('no-results').classList.add('hidden');
+      } else {
+        document.getElementById('search-results').classList.add('hidden');
+        document.getElementById('no-results').classList.remove('hidden');
+      }
+    }
+
+    function displaySearchResults(candidate) {
+      // Display photo
+      const photoContainer = document.getElementById('result-photo');
+      if (candidate.photo_data) {
+        photoContainer.innerHTML = `<img src="${candidate.photo_data}" class="w-full h-full object-cover" alt="Candidate Photo">`;
+      } else {
+        photoContainer.innerHTML = '<span class="text-gray-400">No Photo</span>';
+      }
+
+      // Display signature
+      const signatureContainer = document.getElementById('result-signature');
+      if (candidate.signature_data) {
+        signatureContainer.innerHTML = `<img src="${candidate.signature_data}" class="w-full h-full object-contain" alt="Signature">`;
+      } else {
+        signatureContainer.innerHTML = '<span class="text-gray-400 text-xs">No Signature</span>';
+      }
+
+      // Display details
+      const detailsContainer = document.getElementById('result-details');
+      const fields = [
+        { label: 'Identification Number / ಗುರುತಿನ ಸಂಖ್ಯೆ', value: candidate.identification_number },
+        { label: 'Registration Number / ನೋಂದಣಿ ಸಂಖ್ಯೆ', value: candidate.registration_number },
+        { label: 'Candidate Name / ಅಭ್ಯರ್ಥಿಯ ಹೆಸರು', value: candidate.candidate_name },
+        { label: 'Residential Address / ವಾಸ ವಿಳಾಸ', value: candidate.residential_address },
+        { label: 'Father & Mother Name / ತಂದೆ ಮತ್ತು ತಾಯಿ ಹೆಸರು', value: candidate.father_mother_name },
+        { label: 'Mobile Number / ಮೊಬೈಲ್ ಸಂಖ್ಯೆ', value: candidate.mobile_number },
+        { label: 'Educational Qualification / ಶೈಕ್ಷಣಿಕ ಅರ್ಹತೆ', value: candidate.educational_qualification },
+        { label: 'Date of Joining / ಸೇರ್ಪಡೆ ದಿನಾಂಕ', value: candidate.date_of_joining },
+        { label: 'Time of Joining / ಸೇರ್ಪಡೆ ಸಮಯ', value: candidate.time_of_joining },
+        { label: 'Position (RBA) / ಹುದ್ದೆ (ರಾಹುಸಂ)', value: candidate.position_rba },
+        { label: 'Short Name / ಸಂಕ್ಷಿಪ್ತ ಹೆಸರು', value: candidate.short_name },
+        { label: 'Date of Birth / ಜನ್ಮ ದಿನಾಂಕ', value: candidate.date_of_birth },
+        { label: 'Age / ವಯಸ್ಸು', value: candidate.age },
+        { label: 'Social Media Links / ಸಾಮಾಜಿಕ ಮಾಧ್ಯಮ ಲಿಂಕ್‌ಗಳು', value: candidate.social_media_links },
+        { label: 'Sameness / ಸಮಾನತೆ', value: candidate.sameness || '' }
+      ];
+
+      // Add custom fields if any
+      if (candidate.custom_fields) {
+        try {
+          const customFields = JSON.parse(candidate.custom_fields);
+          Object.entries(customFields).forEach(([key, value]) => {
+            fields.push({ label: key, value: value });
+          });
+        } catch (e) {
+          console.error('Error parsing custom fields');
+        }
+      }
+
+      detailsContainer.innerHTML = fields.map(f => `
+        <div class="flex border-b border-yellow-200 py-1">
+          <span class="font-semibold text-gray-700 w-1/2 text-sm">${f.label}:</span>
+          <span class="text-gray-600 w-1/2 text-sm">${f.value || '-'}</span>
+        </div>
+      `).join('');
+    }
+
+    // Edit Functions
+    function requestEditInfo() {
+      showPasswordModal('edit', 'Enter password to edit candidate information / ಅಭ್ಯರ್ಥಿ ಮಾಹಿತಿ ಸಂಪಾದಿಸಲು ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ');
+    }
+
+    function showEditForm() {
+      if (!currentCandidate) return;
+      
+      document.getElementById('edit-form-section').classList.remove('hidden');
+      document.getElementById('search-section').classList.add('hidden');
+      document.getElementById('add-form-section').classList.add('hidden');
+      document.getElementById('delete-confirmation').classList.add('hidden');
+
+      // Populate form with current data
+      document.getElementById('edit_identification_number').value = currentCandidate.identification_number || '';
+      document.getElementById('edit_registration_number').value = currentCandidate.registration_number || '';
+      document.getElementById('edit_candidate_name').value = currentCandidate.candidate_name || '';
+      document.getElementById('edit_residential_address').value = currentCandidate.residential_address || '';
+      document.getElementById('edit_father_mother_name').value = currentCandidate.father_mother_name || '';
+      document.getElementById('edit_mobile_number').value = currentCandidate.mobile_number || '';
+      document.getElementById('edit_educational_qualification').value = currentCandidate.educational_qualification || '';
+      document.getElementById('edit_date_of_joining').value = currentCandidate.date_of_joining || '';
+      document.getElementById('edit_time_of_joining').value = currentCandidate.time_of_joining || '';
+      document.getElementById('edit_position_rba').value = currentCandidate.position_rba || '';
+      document.getElementById('edit_short_name').value = currentCandidate.short_name || '';
+      document.getElementById('edit_date_of_birth').value = currentCandidate.date_of_birth || '';
+      document.getElementById('edit_age').value = currentCandidate.age || '';
+      document.getElementById('edit_social_media_links').value = currentCandidate.social_media_links || '';
+      document.getElementById('edit_sameness').value = currentCandidate.sameness || '';
+
+      // Set photo preview
+      editPhotoData = currentCandidate.photo_data || '';
+      if (editPhotoData) {
+        document.getElementById('edit-photo-preview').innerHTML = `<img src="${editPhotoData}" class="w-full h-full object-cover">`;
+      } else {
+        document.getElementById('edit-photo-preview').innerHTML = '<span class="text-gray-400 text-xs text-center">No Photo</span>';
+      }
+
+      // Set signature preview
+      editSignatureData = currentCandidate.signature_data || '';
+      if (editSignatureData) {
+        document.getElementById('edit-signature-preview').innerHTML = `<img src="${editSignatureData}" class="w-full h-full object-contain">`;
+      } else {
+        document.getElementById('edit-signature-preview').innerHTML = '<span class="text-gray-400 text-xs text-center">No Signature</span>';
+      }
+
+      // Load custom fields
+      editCustomFieldCount = 0;
+      editCustomFields = {};
+      document.getElementById('edit-custom-fields-container').innerHTML = '';
+      if (currentCandidate.custom_fields) {
+        try {
+          const customFields = JSON.parse(currentCandidate.custom_fields);
+          Object.entries(customFields).forEach(([key, value]) => {
+            addEditCustomFieldWithData(key, value);
+          });
+        } catch (e) {
+          console.error('Error parsing custom fields');
+        }
+      }
+    }
+
+    function hideEditForm() {
+      document.getElementById('edit-form-section').classList.add('hidden');
+      document.getElementById('search-section').classList.remove('hidden');
+    }
+
+    // Delete Functions
+    function requestDeleteInfo() {
+      showPasswordModal('delete', 'Enter password to delete candidate information / ಅಭ್ಯರ್ಥಿ ಮಾಹಿತಿ ಅಳಿಸಲು ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ');
+    }
+
+    function showDeleteConfirmation() {
+      document.getElementById('delete-confirmation').classList.remove('hidden');
+      document.getElementById('search-section').classList.add('hidden');
+    }
+
+    function cancelDelete() {
+      document.getElementById('delete-confirmation').classList.add('hidden');
+      document.getElementById('search-section').classList.remove('hidden');
+    }
+
+    async function confirmDelete() {
+      if (!currentCandidate) return;
+      
+      const btn = document.getElementById('confirm-delete-btn');
+      btn.disabled = true;
+      btn.textContent = 'Deleting... / ಅಳಿಸಲಾಗುತ್ತಿದೆ...';
+
+      const result = await window.dataSdk.delete(currentCandidate);
+      
+      btn.disabled = false;
+      btn.textContent = 'Delete / ಅಳಿಸಿ';
+
+      if (result.isOk) {
+        showToast('Candidate deleted successfully! / ಅಭ್ಯರ್ಥಿ ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಲಾಗಿದೆ!');
+        document.getElementById('delete-confirmation').classList.add('hidden');
+        document.getElementById('search-section').classList.remove('hidden');
+        document.getElementById('search-results').classList.add('hidden');
+        document.getElementById('search-input').value = '';
+        currentCandidate = null;
+      } else {
+        showToast('Failed to delete candidate / ಅಭ್ಯರ್ಥಿಯನ್ನು ಅಳಿಸಲು ವಿಫಲವಾಗಿದೆ', 'error');
+      }
+    }
+
+    // Photo/Signature Upload Handlers
+    function handlePhotoUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          photoData = e.target.result;
+          document.getElementById('photo-preview').innerHTML = `<img src="${photoData}" class="w-full h-full object-cover">`;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function handleSignatureUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          signatureData = e.target.result;
+          document.getElementById('signature-preview').innerHTML = `<img src="${signatureData}" class="w-full h-full object-contain">`;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function handleEditPhotoUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          editPhotoData = e.target.result;
+          document.getElementById('edit-photo-preview').innerHTML = `<img src="${editPhotoData}" class="w-full h-full object-cover">`;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function handleEditSignatureUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          editSignatureData = e.target.result;
+          document.getElementById('edit-signature-preview').innerHTML = `<img src="${editSignatureData}" class="w-full h-full object-contain">`;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Custom Field Functions
+    function addCustomField() {
+      customFieldCount++;
+      const container = document.getElementById('custom-fields-container');
+      const fieldDiv = document.createElement('div');
+      fieldDiv.id = `custom-field-${customFieldCount}`;
+      fieldDiv.className = 'grid md:grid-cols-3 gap-4 items-end bg-purple-50 p-4 rounded-xl';
+      fieldDiv.innerHTML = `
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Field Name / ಫೀಲ್ಡ್ ಹೆಸರು</label>
+          <input type="text" class="custom-field-name w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-field" placeholder="Enter field name">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Field Value / ಫೀಲ್ಡ್ ಮೌಲ್ಯ</label>
+          <input type="text" class="custom-field-value w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-field" placeholder="Enter value">
+        </div>
+        <div>
+          <button type="button" onclick="removeCustomField(${customFieldCount})" class="w-full px-4 py-3 bg-red-500 text-white rounded-xl font-semibold hover:bg-red-600 transition">
+            Remove / ತೆಗೆದುಹಾಕಿ
+          </button>
+        </div>
+      `;
+      container.appendChild(fieldDiv);
+    }
+
+    function removeCustomField(id) {
+      const field = document.getElementById(`custom-field-${id}`);
+      if (field) field.remove();
+    }
+
+    function addEditCustomField() {
+      addEditCustomFieldWithData('', '');
+    }
+
+    function addEditCustomFieldWithData(name, value) {
+      editCustomFieldCount++;
+      const container = document.getElementById('edit-custom-fields-container');
+      const fieldDiv = document.createElement('div');
+      fieldDiv.id = `edit-custom-field-${editCustomFieldCount}`;
+      fieldDiv.className = 'grid md:grid-cols-3 gap-4 items-end bg-purple-50 p-4 rounded-xl';
+      fieldDiv.innerHTML = `
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Field Name / ಫೀಲ್ಡ್ ಹೆಸರು</label>
+          <input type="text" class="edit-custom-field-name w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-field" value="${name}" placeholder="Enter field name">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Field Value / ಫೀಲ್ಡ್ ಮೌಲ್ಯ</label>
+          <input type="text" class="edit-custom-field-value w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-field" value="${value}" placeholder="Enter value">
+        </div>
+        <div>
+          <button type="button" onclick="removeEditCustomField(${editCustomFieldCount})" class="w-full px-4 py-3 bg-red-500 text-white rounded-xl font-semibold hover:bg-red-600 transition">
+            Remove / ತೆಗೆದುಹಾಕಿ
+          </button>
+        </div>
+      `;
+      container.appendChild(fieldDiv);
+    }
+
+    function removeEditCustomField(id) {
+      const field = document.getElementById(`edit-custom-field-${id}`);
+      if (field) field.remove();
+    }
+
+    // Age Calculation
+    function calculateAge() {
+      const dob = document.getElementById('date_of_birth').value;
+      if (dob) {
+        const today = new Date();
+        const birthDate = new Date(dob);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+        }
+        document.getElementById('age').value = age + ' years / ವರ್ಷಗಳು';
+      }
+    }
+
+    function calculateEditAge() {
+      const dob = document.getElementById('edit_date_of_birth').value;
+      if (dob) {
+        const today = new Date();
+        const birthDate = new Date(dob);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+        }
+        document.getElementById('edit_age').value = age + ' years / ವರ್ಷಗಳು';
+      }
+    }
+
+    // Collect custom fields
+    function collectCustomFields() {
+      const customFields = {};
+      const container = document.getElementById('custom-fields-container');
+      const fields = container.querySelectorAll('[id^="custom-field-"]');
+      fields.forEach(field => {
+        const name = field.querySelector('.custom-field-name').value.trim();
+        const value = field.querySelector('.custom-field-value').value.trim();
+        if (name) {
+          customFields[name] = value;
+        }
+      });
+      return JSON.stringify(customFields);
+    }
+
+    function collectEditCustomFields() {
+      const customFields = {};
+      const container = document.getElementById('edit-custom-fields-container');
+      const fields = container.querySelectorAll('[id^="edit-custom-field-"]');
+      fields.forEach(field => {
+        const name = field.querySelector('.edit-custom-field-name').value.trim();
+        const value = field.querySelector('.edit-custom-field-value').value.trim();
+        if (name) {
+          customFields[name] = value;
+        }
+      });
+      return JSON.stringify(customFields);
+    }
+
+    // Form Submissions
+    document.getElementById('candidate-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      if (allCandidates.length >= 999) {
+        showToast('Maximum limit of 999 candidates reached! / ಗರಿಷ್ಠ 999 ಅಭ್ಯರ್ಥಿಗಳ ಮಿತಿ ತಲುಪಿದೆ!', 'error');
+        return;
+      }
+
+      const idNumber = document.getElementById('identification_number').value.trim();
+      const regNumber = document.getElementById('registration_number').value.trim();
+      const candidateName = document.getElementById('candidate_name').value.trim();
+      
+      // Validation
+      if (!idNumber) {
+        showToast('Please enter Identification Number / ದಯವಿಟ್ಟು ಗುರುತಿನ ಸಂಖ್ಯೆ ನಮೂದಿಸಿ', 'error');
+        return;
+      }
+      
+      if (!regNumber) {
+        showToast('Please enter Registration Number / ದಯವಿಟ್ಟು ನೋಂದಣಿ ಸಂಖ್ಯೆ ನಮೂದಿಸಿ', 'error');
+        return;
+      }
+
+      if (!candidateName) {
+        showToast('Please enter Candidate Name / ದಯವಿಟ್ಟು ಅಭ್ಯರ್ಥಿಯ ಹೆಸರು ನಮೂದಿಸಿ', 'error');
+        return;
+      }
+
+      if (!photoData) {
+        showToast('Please upload a photo / ದಯವಿಟ್ಟು ಫೋಟೋ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ', 'error');
+        return;
+      }
+
+      if (!signatureData) {
+        showToast('Please upload a signature / ದಯವಿಟ್ಟು ಸಹಿ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ', 'error');
+        return;
+      }
+      
+      // Check for duplicate ID
+      if (allCandidates.some(c => c.identification_number === idNumber)) {
+        showToast('This Identification Number already exists! / ಈ ಗುರುತಿನ ಸಂಖ್ಯೆ ಈಗಾಗಲೇ ಅಸ್ತಿತ್ವದಲ್ಲಿದೆ!', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('save-btn');
+      const btnText = document.getElementById('save-btn-text');
+      btn.disabled = true;
+      btnText.textContent = 'Saving... / ಉಳಿಸಲಾಗುತ್ತಿದೆ...';
+
+      const candidateData = {
+        identification_number: idNumber,
+        registration_number: regNumber,
+        candidate_name: candidateName,
+        residential_address: document.getElementById('residential_address').value.trim(),
+        father_mother_name: document.getElementById('father_mother_name').value.trim(),
+        mobile_number: document.getElementById('mobile_number').value.trim(),
+        educational_qualification: document.getElementById('educational_qualification').value.trim(),
+        date_of_joining: document.getElementById('date_of_joining').value || '',
+        time_of_joining: document.getElementById('time_of_joining').value || '',
+        position_rba: document.getElementById('position_rba').value.trim(),
+        short_name: document.getElementById('short_name').value.trim(),
+        date_of_birth: document.getElementById('date_of_birth').value || '',
+        age: document.getElementById('age').value || '',
+        photo_data: photoData,
+        signature_data: signatureData,
+        social_media_links: document.getElementById('social_media_links').value.trim(),
+        sameness: document.getElementById('sameness').value.trim(),
+        custom_fields: collectCustomFields(),
+        created_at: new Date().toISOString()
+      };
+
+      if (!window.dataSdk) {
+        btn.disabled = false;
+        btnText.textContent = 'Save / ಉಳಿಸಿ';
+        showToast('Data SDK not available. Please refresh the page. / ಡೇಟಾ SDK ಲಭ್ಯವಿಲ್ಲ', 'error');
+        return;
+      }
+
+      try {
+        const result = await window.dataSdk.create(candidateData);
+        
+        btn.disabled = false;
+        btnText.textContent = 'Save / ಉಳಿಸಿ';
+
+        if (result.isOk) {
+          showToast('✓ Candidate information saved successfully! / ಅಭ್ಯರ್ಥಿ ಮಾಹಿತಿ ಯಶಸ್ವಿಯಾಗಿ ಉಳಿಸಲಾಗಿದೆ!', 'success');
+          setTimeout(() => {
+            hideAddForm();
+            document.getElementById('search-section').classList.remove('hidden');
+            document.getElementById('search-input').value = idNumber;
+            setTimeout(() => searchCandidate(), 100);
+          }, 1500);
+        } else {
+          console.error('Create failed:', result.error);
+          showToast('✗ Failed to save candidate information. Please try again. / ಅಭ್ಯರ್ಥಿ ಮಾಹಿತಿ ಉಳಿಸಲು ವಿಫಲವಾಗಿದೆ', 'error');
+        }
+      } catch (error) {
+        btn.disabled = false;
+        btnText.textContent = 'Save / ಉಳಿಸಿ';
+        console.error('Error:', error);
+        showToast('Error saving data: ' + (error.message || 'Unknown error') + ' / ಡೇಟಾ ಉಳಿಸುವಾಗ ದೋಷ', 'error');
+      }
+    });
+
+    document.getElementById('edit-candidate-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      if (!currentCandidate) return;
+
+      const btn = document.getElementById('update-btn');
+      const btnText = document.getElementById('update-btn-text');
+      btn.disabled = true;
+      btnText.textContent = 'Updating... / ನವೀಕರಿಸಲಾಗುತ್ತಿದೆ...';
+
+      const updatedData = {
+        ...currentCandidate,
+        registration_number: document.getElementById('edit_registration_number').value.trim(),
+        candidate_name: document.getElementById('edit_candidate_name').value.trim(),
+        residential_address: document.getElementById('edit_residential_address').value.trim(),
+        father_mother_name: document.getElementById('edit_father_mother_name').value.trim(),
+        mobile_number: document.getElementById('edit_mobile_number').value.trim(),
+        educational_qualification: document.getElementById('edit_educational_qualification').value.trim(),
+        date_of_joining: document.getElementById('edit_date_of_joining').value,
+        time_of_joining: document.getElementById('edit_time_of_joining').value,
+        position_rba: document.getElementById('edit_position_rba').value.trim(),
+        short_name: document.getElementById('edit_short_name').value.trim(),
+        date_of_birth: document.getElementById('edit_date_of_birth').value,
+        age: document.getElementById('edit_age').value,
+        photo_data: editPhotoData,
+        signature_data: editSignatureData,
+        social_media_links: document.getElementById('edit_social_media_links').value.trim(),
+        sameness: document.getElementById('edit_sameness').value.trim(),
+        custom_fields: collectEditCustomFields()
+      };
+
+      const result = await window.dataSdk.update(updatedData);
+      
+      btn.disabled = false;
+      btnText.textContent = 'Update / ನವೀಕರಿಸಿ';
+
+      if (result.isOk) {
+        showToast('Candidate information updated successfully! / ಅಭ್ಯರ್ಥಿ ಮಾಹಿತಿ ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ!');
+        hideEditForm();
+        // Update search results
+        document.getElementById('search-input').value = updatedData.identification_number;
+        searchCandidate();
+      } else {
+        showToast('Failed to update candidate information / ಅಭ್ಯರ್ಥಿ ಮಾಹಿತಿ ನವೀಕರಿಸಲು ವಿಫಲವಾಗಿದೆ', 'error');
+      }
+    });
+
+    // Data Handler
+    const dataHandler = {
+      onDataChanged(data) {
+        allCandidates = data;
+      }
+    };
+
+    // Element SDK
+    const elementHandler = {
+      defaultConfig,
+      onConfigChange: async (cfg) => {
+        config = { ...defaultConfig, ...cfg };
+        updateLogoDisplay();
+      },
+      mapToCapabilities: (cfg) => ({
+        recolorables: [],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      }),
+      mapToEditPanelValues: (cfg) => new Map([
+        ['site_title', cfg.site_title || defaultConfig.site_title]
+      ])
+    };
+
+    // Initialize SDKs
+    async function init() {
+      if (window.elementSdk) {
+        window.elementSdk.init(elementHandler);
+      }
+      
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) {
+          console.error('Failed to initialize data SDK');
+        }
+      }
+    }
+
+    init();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d65fe8e1581693a',t:'MTc3MjUxMzE1NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
